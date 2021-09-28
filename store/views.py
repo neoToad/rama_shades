@@ -439,10 +439,10 @@ def remove_single_item_from_cart(request, slug):
 
 
 def home(request):
-
+    authenticated = request.user.is_authenticated
     items = Item.objects.all()
-    context = {'object_list': items, }
-    return render(request, 'store/home.html', context)
+    context = {'object_list': items, 'loggedin': authenticated}
+    return render(request, 'store/home.html', context, )
 
 
 class OrderSummaryView(View):
@@ -459,15 +459,7 @@ class OrderSummaryView(View):
                 messages.warning(self.request, "You do not have an active order")
                 return redirect("/")
         else:
-            try:
-                cart = json.loads(self.request.COOKIES['cart'])
-            except KeyError:
-                cart = {}
-            print('Cart:', cart)
-            items = []
-            order = {'get_cart_total': 0, 'get_cart_items': 0}
-
-            context = {'items': items,}
+            context = {}
             return render(self.request, 'store/guest_order_summary.html', context)
 
 

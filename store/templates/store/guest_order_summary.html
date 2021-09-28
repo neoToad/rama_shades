@@ -23,20 +23,19 @@
             <td>{{ order_item.product.title }}</td>
             <td>{{ order_item.product.price }}</td>
             <td>
-                <a href=""><i class="fas fa-minus mr-2"></i></a>
+                <a href=""><i data-product="{{ order_item.product.id }}" data-action="remove"
+                              class="fas fa-minus mr-2 update-cart"></i></a>
                 {{ order_item.quantity }}
-                <a href=""><i data-product="{{ order_item.product.id }}" data-action="add" class="fas fa-plus ml-2 update-cart" ></i></a>
+                <a href=""><i data-product="{{ order_item.product.id }}" data-action="add"
+                              class="fas fa-plus ml-2 update-cart" ></i></a>
             </td>
             <td>
             {% if order_item.product.discount_price %}
-                ${{ order_item.get_total_discount_item_price }}
+                ${{ order_item.product.discount_price }}
                 <span class="badge badge-primary">Saving ${{ order_item.get_amount_saved }}</span>
             {% else %}
                 ${{ order_item.get_total }}
             {% endif %}
-            <a style='color: red;' href="">
-                <i class="fas fa-trash float-right"></i>
-            </a>
             </td>
         </tr>
         {% empty %}
@@ -55,14 +54,14 @@
             <td><b>-${{ object.coupon.amount|floatformat:2 }}</b></td>
         </tr>
         {% endif %}
-        {% if object.get_subtotal %}
+        {% if object.get_cart_items %}
         <tr>
             <td colspan="4"><b>Subtotal</b></td>
-            <td><b>${{ object.get_subtotal|floatformat:2 }}</b></td>
+            <td><b>${{ object.get_cart_total|floatformat:2 }}</b></td>
         </tr>
         <tr>
             <td colspan="4"><b>Shipping</b></td>
-            <td><b>${{ object.shipping|floatformat:2 }}</b></td>
+            <td><b>${{ object.get_shipping|floatformat:2 }}</b></td>
         </tr>
         <tr>
             <td colspan="4"><b>Total</b></td>

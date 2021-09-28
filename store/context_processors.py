@@ -1,5 +1,6 @@
 from .models import Order, Item
 import json
+from decimal import Decimal
 
 
 def cart_processor(request):
@@ -18,22 +19,33 @@ def cart_processor(request):
         cart_items = order['get_cart_items']
 
         for i in cart:
-            cart_items += cart[i]['quantity']
+            try:
+                cart_items += cart[i]['quantity']
 
-            product = Item.objects.get(id=1)
-            total = (product.price * cart[i]['quantity'])
+                product = Item.objects.get(id=i)
+                total = (product.discount_price * cart[i]['quantity'])
 
-            order['get_cart_total'] += total
-            order['get_cart_items'] += cart[i]['quantity']
+                order['get_cart_total'] += total
+                order['get_cart_items'] += cart[i]['quantity']
 
-            item = {
-                'product': {
-                    'id': product.id,
-                    'title': product.title,
-                    'price': product.price,
-                },
-                'quantity': cart[i]['quantity'],
-                'get_total': total,
-            }
-            items.append(item)
+                order['get_shipping'] = Decimal(7 - 1 + (cart[i]['quantity'] * .5))
+
+                order['total'] = order['get_cart_total'] + order['get_shipping']
+
+                get_amount_saved = product.price - product.discount_price
+
+                item = {
+                    'product': {
+                        'id': product.id,
+                        'title': product.title,
+                        'price': product.price,
+                        'discount_price': product.discount_price,
+                    },
+                    'quantity': cart[i]['quantity'],
+                    'get_total': total,
+                    'get_amount_saved': get_amount_saved
+                }
+                items.append(item)
+            except:
+                cart_items -= cart[i]['quantity']
     return {'items': items, 'cart_items': cart_items, 'object': order}
