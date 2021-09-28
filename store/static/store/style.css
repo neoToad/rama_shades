@@ -1,0 +1,44 @@
+body {
+  background-color: #f7ebed;
+}
+
+.responsive {
+  width: 80%;
+  max-width: 300px;
+  height: auto;
+}
+
+.theme {
+  background-color: #FBDFE3;
+}
+
+.pic-max {
+  max-width: 300px;
+    max-height: 200px;
+    overflow: hidden;
+}
+
+.card-border {
+    border: 2px solid #FBDFE3;
+    }
+
+
+.footer {
+  background-color: #FBDFE3;
+  background: linear-gradient(to bottom, rgba(247,235,237,1) 0%, rgba(251,223,227,1) 100%);
+  border-top: 2px solid #FBDFE3;
+}
+
+.top-margin-80 {
+    margin-top: 80px;
+}
+
+.nav-ms-5 {
+    margin-left: 3rem;
+}
+
+@media only screen and (max-width: 991px) {
+  .nav-ms-5 {
+    margin-left: unset;
+}
+}

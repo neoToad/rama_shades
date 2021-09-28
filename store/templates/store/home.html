@@ -1,0 +1,136 @@
+{% extends "store/base.html" %}
+{% load static %}
+
+{% block content %}
+  <link href="{% static 'store/home.css' %}" rel="stylesheet">
+  <main>
+    <div class="home">
+      <section class="video-container">
+        <video autoplay muted loop>
+            <source src="{% static 'glasses.mp4' %}" type="video/mp4">
+        </video>
+        <div class="mask desc" style="background-color: rgba(0, 0, 0, 0.6);">
+          <div class="d-flex justify-content-center align-items-center h-100">
+            <div class="text-white">
+              <h1 class="mb-3">Funness Awaits</h1>
+              <h4 class="mb-3 text-center">Subheading</h4>
+              <div class="text-center">
+                <a class="btn btn-outline-light btn-lg" href="#!" role="button"
+                  >Call to action</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!--Section: Products v.3-->
+      <section class="container mb-4">
+        <div class="">
+            <h2 class="">Just In</h2>
+        </div>
+
+        <div class="row wow fadeIn">
+
+          {% for item in object_list %}
+          <div class="col-lg-3 col-md-4 mb-4 card-group">
+            <div class="card card-border shadow-0 " style="background-color: #ffffff6e;">
+              <a href="{{ item.get_absolute_url }}">
+              <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
+                <img src="{{ item.image.url }}" class="img-fluid" />
+                <a href="{{ item.get_absolute_url }}">
+                  <div class="mask" style="background-color: rgba(251, 251, 251, 0.15)"></div>
+                </a>
+              </div>
+              <div class="card-header">Featured</div>
+              <div class="card-body">
+                <h5 class="card-title">{{ item.title }}</h5>
+                <h4 class="font-weight-bold blue-text">
+                  <strong>$
+                  {% if item.discount_price %}
+                    {{ item.discount_price }}
+                  {% else %}
+                    {{ item.price }}
+                  {% endif %}
+                  </strong>
+                </h4>
+                <button data-product="{{ item.id }}" data-action="add" class="btn btn-outline-primary btn-md my-0 p update-cart">
+                  Add To Cart
+                </button>
+                <a href="{{ item.get_absolute_url }}" class="btn btn-outline-info btn-md my-0 p">
+                  Details
+                </a>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+
+        </div>
+
+      </section>
+      <!--Section: Products v.3-->
+
+      <!--Pagination-->
+
+      {% if is_paginated %}
+      <nav class="d-flex justify-content-center wow fadeIn">
+        <ul class="pagination pg-blue">
+
+          {% if page_obj.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+              <span class="sr-only">Previous</span>
+            </a>
+          </li>
+          {% endif %}
+
+          <li class="page-item active">
+            <a class="page-link" href="?page={{ page_obj.number }}">{{ page_obj.number }}
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+
+          {% if page_obj.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+              <span class="sr-only">Next</span>
+            </a>
+          </li>
+          {% endif %}
+        </ul>
+      </nav>
+      {% endif %}
+      <section class="container mt-5 my-4">
+        <div class="row text-center">
+          <div class="col-sm-5 col-md-6 bg-image">
+            <img src="{% static 'imgs/pexels-rio-kuncoro-2703963.jpg' %}" class="img-fluid" />
+            <div
+              class="mask"
+              style="
+                background: rgb(247,235,237);
+                background: linear-gradient(180deg, rgba(247,235,237,1) 0%, rgba(247,235,237,0.3) 47%, rgba(247,235,237,1) 100%),
+                  linear-gradient(93deg, rgba(247,235,237,1) 17%, rgba(247,235,237,0.3) 47%, rgba(247,235,237,1) 79%);
+
+              "
+            ></div>
+          </div>
+          <div class="col-sm-5 offset-sm-2 col-md-6 offset-md-0 d-flex align-items-center justify-content-center">
+
+            <div>
+              <h4 class="mb-5 pb-5">test sacszjkfds lkskal fjsdhfkjsa llksdah fkjsdlhfksdhafklsdhfs </h4>
+              <p aria-hidden="true">
+                <span class="placeholder col-12"></span>
+              </p>
+              <p aria-hidden="true">
+                <span class="placeholder col-12"></span>
+              </p>
+              <button type="button" class="btn btn-primary">Example button</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+{% endblock content %}

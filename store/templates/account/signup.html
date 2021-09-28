@@ -1,0 +1,57 @@
+{% extends "account/base.html" %}
+{% load i18n %}
+{% load account socialaccount %}
+{% load crispy_forms_tags %}
+
+{% block head_title %}{% trans "Signup" %}{% endblock %}
+
+{% block content %}
+  <main class="top-margin-80" >
+    <div class="container">
+      <section class="mb-4">
+        <div class="row wow fadeIn">
+          <div class='col-6 offset-3'>
+            <h1>{% trans "Sign Up" %}</h1>
+            <p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
+
+            {% get_providers as socialaccount_providers %}
+
+              {% if socialaccount_providers %}
+                <p>Sign up with one of your existing third party accounts:</p>
+
+                <div class="socialaccount_ballot">
+
+                  <ul class="socialaccount_providers" style="list-style-type: none;">
+                    {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+                  </ul>
+
+                  <div class="login-or">{% trans 'or' %}</div>
+
+                </div>
+
+                {% include "socialaccount/snippets/login_extra.html" %}
+
+              {% else %}
+                <p>{% blocktrans %}If you have not created an account yet, then please
+                <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
+              {% endif %}
+
+
+
+            <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+              {% csrf_token %}
+              {{form.email|as_crispy_field}}
+              {{form.password1|as_crispy_field}}
+              {{form.password2|as_crispy_field}}
+
+              {% if redirect_field_value %}
+                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+              {% endif %}
+              <button class='btn btn-primary mt-3' type="submit">{% trans "Sign Up" %} &raquo;</button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+{% endblock %}

@@ -1,0 +1,100 @@
+{% load cart_template_tags %}
+{% load static %}
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top theme">
+  <!-- Container wrapper -->
+  <div class="container">
+
+    <!-- Navbar brand -->
+    <a class="navbar-brand" href="/">
+      <img
+        src="{% static 'imgs/rama_logo.png' %}"
+        height="16"
+        alt="Rama Shades - Quality Sunglasses At Affordable Prices."
+        loading="lazy"
+        style="margin-top: -1px;"
+        class="responsive"
+      />
+    </a>
+
+    <!-- Toggle button -->
+    <button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Collapsible wrapper -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+        <!-- Link -->
+        {% if request.user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link" href="#">Account</a>
+        </li>
+        <li class="nav-item items-align-center d-none d-lg-block">
+          <a class="nav-link disabled" href="">|</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'account_logout' %}">Logout</a>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'account_login' %}">Login</a>
+        </li>
+        <li class="nav-item items-align-center d-none d-lg-block">
+          <a class="nav-link disabled" href="">|</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'account_signup' %}">Signup</a>
+        </li>
+        {% endif %}
+        <!-- Dropdown -->
+
+        <li class="nav-item dropdown nav-ms-5">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
+            Dropdown
+          </a>
+          <!-- Dropdown menu -->
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li>
+              <a class="dropdown-item" href="#">Action</a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="#">Another action</a>
+            </li>
+            <li>
+              <hr class="dropdown-divider" />
+            </li>
+            <li>
+              <a class="dropdown-item" href="#">Something else here</a>
+            </li>
+          </ul>
+        </li>
+
+      </ul>
+
+      <!-- Icons -->
+      <ul class="navbar-nav d-flex flex-row me-1">
+        <li class="nav-item me-3 me-lg-0">
+          <a class="nav-link" href="{% url 'store:order-summary' %}">
+            <i class="fas fa-shopping-cart"></i>
+              <span class="badge red z-depth-1 mr-1"  style="display: contents;"> {{ cart_items }} </span>
+          </a>
+        </li>
+        <li class="nav-item me-3 me-lg-0">
+          <a class="nav-link" href="#"><i class="fab fa-twitter{% if request.user.is_authenticated %} pt-1{% endif %}"></i></a>
+        </li>
+      </ul>
+
+      <!-- Search -->
+      <form class="w-auto" style="margin-block-end: unset;">
+        <input type="search" class="form-control" placeholder="Type query" aria-label="Search">
+      </form>
+
+    </div>
+  </div>
+  <!-- Container wrapper -->
+</nav>
+<!-- Navbar -->
