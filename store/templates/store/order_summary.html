@@ -17,7 +17,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for order_item in cart_items %}
+        {% for order_item in items %}
         <tr>
             <th scope="row">{{ forloop.counter }}</th>
             <td>{{ order_item.item.title }}</td>
