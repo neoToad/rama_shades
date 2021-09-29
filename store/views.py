@@ -274,6 +274,8 @@ class CheckoutView(View):
                         quantity=item['quantity'],
                     )
 
+                    order.items.add(order_item)
+
                 if is_valid_form([first_name, last_name, shipping_address1, shipping_country, shipping_zip]):
                     shipping_address = Address(
                         user=user,
@@ -374,49 +376,96 @@ class PaymentView(View):
     def post(self, *args, **kwargs):
         if self.request.user.is_authenticated:
             order = Order.objects.get(user=self.request.user, ordered=False)
+            form = PaymentForm(self.request.POST)
+            userprofile = UserProfile.objects.get(user=self.request.user)
+            if form.is_valid():
+                token = form.cleaned_data.get('stripeToken')
+                save = form.cleaned_data.get('save')
+                use_default = form.cleaned_data.get('use_default')
+                if save:
+                    if userprofile.stripe_customer_id != '' and userprofile.stripe_customer_id is not None:
+                        customer = stripe.Customer.retrieve(
+                            userprofile.stripe_customer_id)
+                        customer.sources.create(source=token)
+                    else:
+                        customer = stripe.Customer.create(
+                            email=self.request.user.email,
+                        )
+                        customer.sources.create(source=token)
+                        userprofile.stripe_customer_id = customer['id']
+                        userprofile.one_click_purchasing = True
+                        userprofile.save()
+                amount = int(order.total() * 100)
+                # try:
+                if use_default or save:
+                    # charge the customer because we cannot charge the token more than once
+                    charge = stripe.Charge.create(
+                        amount=amount,  # cents
+                        currency="usd",
+                        customer=userprofile.stripe_customer_id
+                    )
+                else:
+                    # charge once off on the token
+                    charge = stripe.Charge.create(
+                        amount=amount,  # cents
+                        currency="usd",
+                        source=token
+                    )
+                # create the payment
+                payment = Payment()
+                payment.stripe_charge_id = charge['id']
+                payment.user = self.request.user
+                payment.amount = order.total()
+                payment.save()
+                # assign the payment to the order
+                order_items = order.items.all()
+                order_items.update(ordered=True)
+                for item in order_items:
+                    item.save()
+                order.ordered = True
+                order.payment = payment
+                order.ref_code = create_ref_code()
+                order.save()
+                messages.success(self.request, "Your order was successful!")
+                return redirect("/")
+
         else:
             user = self.request.session.get('guest_checkout_id')
             order = Order.objects.get(id=user, ordered=False)
 
-        form = PaymentForm(self.request.POST)
-        if form.is_valid():
-            token = form.cleaned_data.get('stripeToken')
-            save = form.cleaned_data.get('save')
-            use_default = form.cleaned_data.get('use_default')
+            form = PaymentForm(self.request.POST)
 
-            amount = int(order.total() * 100)
+            if form.is_valid():
+                token = form.cleaned_data.get('stripeToken')
+                use_default = form.cleaned_data.get('use_default')
 
-            # try:
-            # charge once off on the token
-            charge = stripe.Charge.create(
-                amount=amount,  # cents
-                currency="usd",
-                source=token
-            )
+                amount = int(order.total() * 100)
 
-            # create the payment
-            payment = Payment()
-            payment.stripe_charge_id = charge['id']
-            payment.user = order.user
-            payment.amount = order.total()
-            payment.save()
+                charge = stripe.Charge.create(
+                    amount=amount,  # cents
+                    currency="usd",
+                    source=token
+                )
 
-            # assign the payment to the order
+                payment = Payment()
+                payment.stripe_charge_id = charge['id']
+                payment.user = order.user
+                payment.amount = order.total()
+                payment.save()
 
-            order_items = order.items.all()
-            order_items.update(ordered=True)
-            for item in order_items:
-                item.save()
-
-            order.ordered = True
-            order.payment = payment
-            order.ref_code = create_ref_code()
-            order.save()
-            messages.success(self.request, "Your order was successful!")
-            response = redirect('/')
-            response.delete_cookie('cart')
-
-            return response
+                # assign the payment to the order
+                order_items = order.items.all()
+                order_items.update(ordered=True)
+                for item in order_items:
+                    item.save()
+                order.ordered = True
+                order.payment = payment
+                order.ref_code = create_ref_code()
+                order.save()
+                messages.success(self.request, "Your order was successful!")
+                response = redirect('/')
+                response.delete_cookie('cart')
+                return response
 
             # except stripe.error.CardError as e:
             #     body = e.json_body
