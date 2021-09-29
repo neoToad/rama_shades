@@ -8,7 +8,6 @@ def cookie_cart(request):
         cart = json.loads(request.COOKIES['cart'])
     except KeyError:
         cart = {}
-    print('Cart:', cart)
     items = []
     order = {'get_cart_total': 0, 'get_cart_items': 0}
     cart_items = order['get_cart_items']

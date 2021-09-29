@@ -8,10 +8,13 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 import json
 import datetime
+from .utils import cookie_cart
+from django.contrib.auth import get_user_model
 
 from .forms import CheckoutForm, CouponForm, RefundForm, PaymentForm
 
@@ -223,14 +226,21 @@ class CheckoutView(View):
                 messages.warning(self.request, "You do not have an active order")
                 return redirect("store:order-summary")
         else:
+            user = get_user_model()
             transaction_id = datetime.datetime.now().timestamp()
             form = CheckoutForm(self.request.POST or None)
             print("User is entering a new shipping address")
+
+            cookie_data = cookie_cart(self.request)
+            items = cookie_data['items']
+
             if form.is_valid():
+
                 first_name = form.cleaned_data.get(
                     'first_name')
                 last_name = form.cleaned_data.get(
                     'last_name')
+
                 shipping_address1 = form.cleaned_data.get(
                     'shipping_address')
                 shipping_address2 = form.cleaned_data.get(
@@ -238,41 +248,123 @@ class CheckoutView(View):
                 shipping_country = form.cleaned_data.get(
                     'shipping_country')
                 shipping_zip = form.cleaned_data.get('shipping_zip')
+
+                user, created = user.objects.get_or_create(
+                    first_name=first_name,
+                    last_name=last_name,
+                    email=f"{(str(random.randint(10_000, 60_000)))}@"
+                          f"{(str(random.randint(10_000, 60_000)))}",
+                )
+
+                user.save()
+
+                order = Order.objects.create(
+                    user=user,
+                    ordered=False,
+                )
+
+                print(items)
+
+                for item in items:
+                    product = Item.objects.get(id=item['product']['id'])
+
+                    order_item = OrderItem.objects.create(
+                        user=user,
+                        item=product,
+                        quantity=item['quantity'],
+                    )
+
                 if is_valid_form([first_name, last_name, shipping_address1, shipping_country, shipping_zip]):
-                    pass
+                    shipping_address = Address(
+                        user=user,
+                        first_name=first_name,
+                        last_name=last_name,
+                        street_address=shipping_address1,
+                        apartment_address=shipping_address2,
+                        country=shipping_country,
+                        zip=shipping_zip,
+                        address_type='S'
+                    )
 
-            print(
-                'user dont exist'
-            )
+                    shipping_address.save()
 
-            print('Cookies:', self.request.COOKIES)
+                    order.shipping_address = shipping_address
+                    order.save()
 
-            return JsonResponse('payment complete', safe=False)
+                else:
+                    messages.info(
+                        self.request, "Please fill in the required shipping address fields")
+
+            same_billing_address = form.cleaned_data.get(
+                'same_billing_address')
+
+            if same_billing_address:
+                billing_address = shipping_address
+                billing_address.pk = None
+                billing_address.save()
+                billing_address.address_type = 'B'
+                billing_address.save()
+                order.billing_address = billing_address
+                order.save()
+
+            else:
+                print("User is entering a new billing address")
+                billing_address1 = form.cleaned_data.get(
+                    'billing_address')
+                billing_address2 = form.cleaned_data.get(
+                    'billing_address2')
+                billing_country = form.cleaned_data.get(
+                    'billing_country')
+                billing_zip = form.cleaned_data.get('billing_zip')
+
+                if is_valid_form([billing_address1, billing_country, billing_zip]):
+                    billing_address = Address(
+                        user=self.request.user,
+                        street_address=billing_address1,
+                        apartment_address=billing_address2,
+                        country=billing_country,
+                        zip=billing_zip,
+                        address_type='B'
+                    )
+                    billing_address.save()
+
+                    order.billing_address = billing_address
+                    order.save()
+                else:
+                    messages.info(
+                        self.request, "Please fill in the required billing address fields")
+
+            payment_option = form.cleaned_data.get('payment_option')
+
+
+
+
+            self.request.session['guest_checkout_id'] = order.id
+
+            if payment_option == 'S':
+                return redirect('store:payment', payment_option='stripe')
+            elif payment_option == 'P':
+                return redirect('store:payment', payment_option='paypal')
+            else:
+                messages.warning(
+                    self.request, "Invalid payment option selected")
+                return redirect('store:checkout')
 
 
 class PaymentView(View):
     def get(self, *args, **kwargs):
-        order = Order.objects.get(user=self.request.user, ordered=False)
+        if self.request.user.is_authenticated:
+            order = Order.objects.get(user=self.request.user, ordered=False)
+        else:
+            user = self.request.session.get('guest_checkout_id')
+            order = Order.objects.get(id=user, ordered=False)
+
         if order.billing_address:
             context = {
                 'order': order,
                 'DISPLAY_COUPON_FORM': False,
                 'STRIPE_PUBLIC_KEY': settings.STRIPE_PUBLIC_KEY
             }
-            userprofile = self.request.user.userprofile
-            if userprofile.one_click_purchasing:
-                # fetch the users card list
-                cards = stripe.Customer.list_sources(
-                    userprofile.stripe_customer_id,
-                    limit=3,
-                    object='card'
-                )
-                card_list = cards['data']
-                if len(card_list) > 0:
-                    # update the context with the default card
-                    context.update({
-                        'card': card_list[0]
-                    })
             return render(self.request, "store/payment.html", context)
         else:
             messages.warning(
@@ -280,52 +372,32 @@ class PaymentView(View):
             return redirect("store:checkout")
 
     def post(self, *args, **kwargs):
-        order = Order.objects.get(user=self.request.user, ordered=False)
+        if self.request.user.is_authenticated:
+            order = Order.objects.get(user=self.request.user, ordered=False)
+        else:
+            user = self.request.session.get('guest_checkout_id')
+            order = Order.objects.get(id=user, ordered=False)
+
         form = PaymentForm(self.request.POST)
-        userprofile = UserProfile.objects.get(user=self.request.user)
         if form.is_valid():
             token = form.cleaned_data.get('stripeToken')
             save = form.cleaned_data.get('save')
             use_default = form.cleaned_data.get('use_default')
 
-            if save:
-                if userprofile.stripe_customer_id != '' and userprofile.stripe_customer_id is not None:
-                    customer = stripe.Customer.retrieve(
-                        userprofile.stripe_customer_id)
-                    customer.sources.create(source=token)
-
-                else:
-                    customer = stripe.Customer.create(
-                        email=self.request.user.email,
-                    )
-                    customer.sources.create(source=token)
-                    userprofile.stripe_customer_id = customer['id']
-                    userprofile.one_click_purchasing = True
-                    userprofile.save()
-
             amount = int(order.total() * 100)
 
             # try:
-
-            if use_default or save:
-                # charge the customer because we cannot charge the token more than once
-                charge = stripe.Charge.create(
-                    amount=amount,  # cents
-                    currency="usd",
-                    customer=userprofile.stripe_customer_id
-                )
-            else:
-                # charge once off on the token
-                charge = stripe.Charge.create(
-                    amount=amount,  # cents
-                    currency="usd",
-                    source=token
-                )
+            # charge once off on the token
+            charge = stripe.Charge.create(
+                amount=amount,  # cents
+                currency="usd",
+                source=token
+            )
 
             # create the payment
             payment = Payment()
             payment.stripe_charge_id = charge['id']
-            payment.user = self.request.user
+            payment.user = order.user
             payment.amount = order.total()
             payment.save()
 
@@ -340,9 +412,11 @@ class PaymentView(View):
             order.payment = payment
             order.ref_code = create_ref_code()
             order.save()
-
             messages.success(self.request, "Your order was successful!")
-            return redirect("/")
+            response = redirect('/')
+            response.delete_cookie('cart')
+
+            return response
 
             # except stripe.error.CardError as e:
             #     body = e.json_body
