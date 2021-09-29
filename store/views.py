@@ -44,49 +44,48 @@ def is_valid_form(values):
     return valid
 
 
-def guest_checkout(request):
-    form = CheckoutForm()
-    context = {
-        'form': form,
-        'couponform': CouponForm(),
-        'DISPLAY_COUPON_FORM': True
-    }
-    return render(request, "store/guest_checkout.html", context)
-
-
 class CheckoutView(View):
     def get(self, *args, **kwargs):
-        try:
-            order = Order.objects.get(user=self.request.user, ordered=False)
+        if self.request.user.is_authenticated:
+            try:
+                order = Order.objects.get(user=self.request.user, ordered=False)
+                form = CheckoutForm()
+                context = {
+                    'form': form,
+                    'couponform': CouponForm(),
+                    'order': order,
+                    'DISPLAY_COUPON_FORM': True
+                }
+
+                shipping_address_qs = Address.objects.filter(
+                    user=self.request.user,
+                    address_type='S',
+                    default=True
+                )
+                if shipping_address_qs.exists():
+                    context.update(
+                        {'default_shipping_address': shipping_address_qs[0]})
+
+                billing_address_qs = Address.objects.filter(
+                    user=self.request.user,
+                    address_type='B',
+                    default=True
+                )
+                if billing_address_qs.exists():
+                    context.update(
+                        {'default_billing_address': billing_address_qs[0]})
+                return render(self.request, "store/checkout.html", context)
+            except ObjectDoesNotExist:
+                messages.info(self.request, "You do not have an active order")
+                return redirect("store:checkout")
+        else:
             form = CheckoutForm()
             context = {
                 'form': form,
                 'couponform': CouponForm(),
-                'order': order,
                 'DISPLAY_COUPON_FORM': True
             }
-
-            shipping_address_qs = Address.objects.filter(
-                user=self.request.user,
-                address_type='S',
-                default=True
-            )
-            if shipping_address_qs.exists():
-                context.update(
-                    {'default_shipping_address': shipping_address_qs[0]})
-
-            billing_address_qs = Address.objects.filter(
-                user=self.request.user,
-                address_type='B',
-                default=True
-            )
-            if billing_address_qs.exists():
-                context.update(
-                    {'default_billing_address': billing_address_qs[0]})
-            return render(self.request, "store/checkout.html", context)
-        except ObjectDoesNotExist:
-            messages.info(self.request, "You do not have an active order")
-            return redirect("store:checkout")
+            return render(self.request, "store/guest_checkout.html", context)
 
     def post(self, *args, **kwargs):
         form = CheckoutForm(self.request.POST or None)
@@ -392,6 +391,7 @@ def add_to_cart(request, slug):
         return redirect("store:order-summary")
 
 
+@login_required
 def remove_from_cart(request, slug):
     item = get_object_or_404(Item, slug=slug)
     order_qs = Order.objects.filter(
@@ -419,6 +419,7 @@ def remove_from_cart(request, slug):
         return redirect("store:product", slug=slug)
 
 
+@login_required
 def remove_single_item_from_cart(request, slug):
     item = get_object_or_404(Item, slug=slug)
     order_qs = Order.objects.filter(

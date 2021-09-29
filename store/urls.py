@@ -12,7 +12,6 @@ from .views import (
     RequestRefundView,
     update_item,
     order_success,
-    guest_checkout,
 )
 app_name = 'store'
 
@@ -29,7 +28,6 @@ urlpatterns = [
     path('order-summary/', OrderSummaryView.as_view(), name='order-summary'),
     path('guest_order-summary/', OrderSummaryView.as_view(), name='guest_order-summary'),
     path('checkout/', CheckoutView.as_view(), name='checkout'),
-    path('guest_checkout/', guest_checkout, name='guest_checkout'),
     path('add-coupon/', AddCouponView.as_view(), name='add-coupon'),
     path('payment/<payment_option>/', PaymentView.as_view(), name='payment'),
     path('request-refund/', RequestRefundView.as_view(), name='request-refund'),
