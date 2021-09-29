@@ -6,7 +6,7 @@ from decimal import Decimal
 def cart_processor(request):
     if request.user.is_authenticated:
         order, created = Order.objects.get_or_create(user=request.user, ordered=False)
-        items = order.user.orderitem_set.all()
+        items = order.user.orderitem_set.all().exclude(ordered=True)
         cart_items = order.get_cart_items
     else:
         try:
@@ -28,7 +28,7 @@ def cart_processor(request):
                 order['get_cart_total'] += total
                 order['get_cart_items'] += cart[i]['quantity']
 
-                order['get_shipping'] = Decimal(7 - 1 + (cart[i]['quantity'] * .5))
+                order['get_shipping'] = Decimal(7 + (cart[i]['quantity'] * .5))
 
                 order['total'] = order['get_cart_total'] + order['get_shipping']
 

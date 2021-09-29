@@ -134,7 +134,7 @@ class Order(models.Model):
 
     @property
     def get_cart_items(self):
-        order_items = self.user.orderitem_set.all()
+        order_items = self.user.orderitem_set.all().exclude(ordered=True)
         total = sum([item.quantity for item in order_items])
         return total
 
@@ -181,7 +181,7 @@ class Payment(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.user.username
+        return self.user.email
 
 
 class Coupon(models.Model):
