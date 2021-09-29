@@ -44,6 +44,16 @@ def is_valid_form(values):
     return valid
 
 
+def guest_checkout(request):
+    form = CheckoutForm()
+    context = {
+        'form': form,
+        'couponform': CouponForm(),
+        'DISPLAY_COUPON_FORM': True
+    }
+    return render(request, "store/guest_checkout.html", context)
+
+
 class CheckoutView(View):
     def get(self, *args, **kwargs):
         try:
