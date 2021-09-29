@@ -167,7 +167,7 @@ class Address(models.Model):
     default = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.user.email
+        return self.street_address
 
     class Meta:
         verbose_name_plural = 'Addresses'
@@ -181,7 +181,7 @@ class Payment(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.user.email
+        return str(self.amount)
 
 
 class Coupon(models.Model):

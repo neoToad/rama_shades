@@ -450,10 +450,7 @@ class OrderSummaryView(View):
 
         if self.request.user.is_authenticated:
             try:
-                order = Order.objects.get_or_create(user=self.request.user, ordered=False)
-                context = {
-                    'object': order
-                }
+                context = {}
                 return render(self.request, 'store/order_summary.html', context)
             except ObjectDoesNotExist:
                 messages.warning(self.request, "You do not have an active order")
