@@ -35,9 +35,14 @@ def products(request):
     return render(request, "products.html", context)
 
 
-class ItemDetailView(DetailView):
-    model = Item
-    template_name = "store/product.html"
+def item_detail_view(request, slug):
+    product = Item.objects.get(slug=slug)
+    image_list = product.images.all()
+    context = {
+        'object': product,
+        'images': image_list
+    }
+    return render(request, "store/product.html", context)
 
 
 def is_valid_form(values):
