@@ -43,6 +43,7 @@ class Item(models.Model):
     label = models.CharField(choices=LABEL_CHOICES, max_length=1)
     slug = models.SlugField()
     description = models.TextField()
+    additional_info = models.TextField()
     image = models.ImageField()
     image_hover = models.ImageField(blank=True, null=True)
 
