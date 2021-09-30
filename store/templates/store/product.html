@@ -92,8 +92,17 @@
       <div class="row wow fadeIn">
         {% for image in images %}
           <!--Grid column-->
-          <div class="col-lg-4 col-md-12 mb-4">
+          <div class="col-lg-4 col-md-12 mb-4 bg-image">
             <img src="{{ image.image.url }}" class="img-fluid" alt="">
+<!--            <div-->
+<!--              class="mask"-->
+<!--              style="-->
+<!--                background: rgb(247,235,237);-->
+<!--                background: linear-gradient(180deg, rgba(247,235,237,1) 0%, rgba(247,235,237,0.3) 47%, rgba(247,235,237,1) 100%),-->
+<!--                  linear-gradient(93deg, rgba(247,235,237,1) 17%, rgba(247,235,237,0.3) 47%, rgba(247,235,237,1) 79%);-->
+
+<!--              "-->
+<!--            ></div>-->
           </div>
           <!--Grid column-->
         {% endfor %}
