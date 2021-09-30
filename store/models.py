@@ -6,6 +6,7 @@ from django.db.models.signals import post_save
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from decimal import Decimal
+from django.template.defaultfilters import slugify
 
 CATEGORY_CHOICES = (
     ('S', 'Shirt'),
@@ -64,6 +65,11 @@ class Item(models.Model):
         return reverse("store:remove-from-cart", kwargs={
             'slug': self.slug
         })
+
+
+class ItemImage(models.Model):
+    item = models.ForeignKey(Item, related_name='images', on_delete=models.CASCADE)
+    image = models.ImageField()
 
 
 class OrderItem(models.Model):

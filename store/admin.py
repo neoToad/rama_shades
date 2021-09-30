@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from .models import Item, OrderItem, Order, Payment, Coupon, Refund, Address, UserProfile
+from .models import Item, OrderItem, Order, Payment, Coupon, \
+    Refund, Address, UserProfile, ItemImage
 
 
 def make_refund_accepted(modeladmin, request, queryset):
@@ -55,7 +56,16 @@ class AddressAdmin(admin.ModelAdmin):
     search_fields = ['user', 'street_address', 'apartment_address', 'zip']
 
 
-admin.site.register(Item)
+class PropertyImageInline(admin.TabularInline):
+    model = ItemImage
+    extra = 3
+
+
+class ItemAdmin(admin.ModelAdmin):
+    inlines = [ PropertyImageInline, ]
+
+
+admin.site.register(Item, ItemAdmin)
 admin.site.register(OrderItem)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(Payment)
