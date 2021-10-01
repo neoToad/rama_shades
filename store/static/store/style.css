@@ -37,6 +37,9 @@ body {
     margin-left: 3rem;
 }
 
+.dt-cust:after {
+    content: none;
+}
 
 @media only screen and (max-width: 991px) {
   .nav-ms-5 {
