@@ -9,7 +9,7 @@ from decimal import Decimal
 from django.template.defaultfilters import slugify
 
 CATEGORY_CHOICES = (
-    ('SQUARE', 'Square'),
+    ('Square', 'Square'),
     ('Cat Eye', 'Cat Eye'),
     ('Round', 'Round'),
     ('Rectangular', 'Rectangular'),
