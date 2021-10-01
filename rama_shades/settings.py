@@ -19,8 +19,6 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-
-
 INSTALLED_APPS = [
     # My Apps
     'store',
@@ -86,12 +84,13 @@ WSGI_APPLICATION = 'rama_shades.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': os.getenv("DATABASE_NAME"),
         'USER': os.getenv("DB_USERNAME"),
-        'PASSWORD': os.getenv("DATABASE_PASSWORD"),
+        'PASSWORD': os.getenv("DB_Password"),
         'HOST': os.getenv("DATABASE_HOST"),
         'PORT': os.getenv("DATABASE_PORT"),
     }
