@@ -614,7 +614,7 @@ def home(request):
 
 
 def category(request, prod_category):
-    prod_category = str(prod_category).upper()
+    prod_category = str(prod_category).title()
     products = Item.objects.filter(category=prod_category)
     category_name = products[0].category
     context = {
