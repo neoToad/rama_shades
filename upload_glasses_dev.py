@@ -20,13 +20,13 @@ objs = []
 
 # Bulk Create
 for row_idx in range(2, 10):
-    slug = '-'.join(ws1.cell(row=row_idx, column=2).value.split(' '))
+    slug = '-'.join(ws1.cell(row=row_idx, column=2).value.split(' '))[:30]
     print(f'C:/Users/colin/PycharmProjects/who_cutie_scraper/items/item-{ws1.cell(row=row_idx, column=1).value}/main_img.png')
 
     if not Item.objects.filter(slug=slug).exists():
         objs.append(
             Item(
-                title=ws1.cell(row=row_idx, column=2).value,
+                title=ws1.cell(row=row_idx, column=2).value[:99],
                 description=ws1.cell(row=row_idx, column=3).value,
                 additional_info=ws1.cell(row=row_idx, column=4).value,
                 image=f'images/{ws1.cell(row=row_idx, column=1).value}_main_img.png',

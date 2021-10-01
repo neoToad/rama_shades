@@ -38,7 +38,7 @@ class Item(models.Model):
     title = models.CharField(max_length=100)
     price = models.DecimalField(max_digits=7, decimal_places=2)
     discount_price = models.DecimalField(max_digits=7, decimal_places=2, blank=True, null=True)
-    category = models.CharField(choices=CATEGORY_CHOICES, max_length=50, default='SQUARE')
+    category = models.CharField(choices=CATEGORY_CHOICES, max_length=50, default='Square')
     slug = models.SlugField()
     description = models.TextField()
     additional_info = models.TextField()
