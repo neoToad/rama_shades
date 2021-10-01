@@ -7,12 +7,11 @@
       <!--Section: Products v.3-->
       <section class="container mb-4 top-margin-80">
         <div class="">
-            <h2 class="">{{ category }} </h2>
+            <h2 class="">{{ category }} Sunglasses</h2>
         </div>
 
         <div class="row wow fadeIn">
-
-          {% for item in object_list %}
+          {% for item in products %}
             <div class="col-lg-3 col-md-4 mb-4 card-group">
               <div class="card shadow-0 " style="background-color: #ffffff6e;">
                 <a href="{{ item.get_absolute_url }}">
@@ -20,7 +19,6 @@
                     <img src="{{ item.image.url }}" class="img-fluid image"
                       onmouseover="this.src='{{ item.image_hover.url }}';"
                       onmouseout="this.src='{{ item.image.url }}';" />
-
                   </div>
                 </a>
                 <div class="card-header">Featured</div>
@@ -46,14 +44,11 @@
               </div>
             </div>
           {% endfor %}
-
         </div>
 
       </section>
       <!--Section: Products v.3-->
-
       <!--Pagination-->
-
       {% if is_paginated %}
       <nav class="d-flex justify-content-center wow fadeIn">
         <ul class="pagination pg-blue">
@@ -84,80 +79,6 @@
         </ul>
       </nav>
       {% endif %}
-
-
-      <section class="container mt-5 my-4">
-        <div class="row text-center">
-          <div class="col-sm-5 col-md-6 bg-image">
-            <img src="{% static 'imgs/beach.jpeg' %}" class="img-fluid" />
-            <div
-              class="mask"
-              style="
-                background: rgb(247,235,237);
-                background: linear-gradient(180deg, rgba(247,235,237,1) 0%, rgba(247,235,237,0.2) 47%, rgba(247,235,237,1) 100%),
-                  linear-gradient(93deg, rgba(247,235,237,1) 17%, rgba(247,235,237,0.2) 47%, rgba(247,235,237,1) 79%);
-
-              "
-            ></div>
-          </div>
-          <div class="col-sm-5 offset-sm-2 col-md-6 offset-md-0 d-flex align-items-center justify-content-center bg-image">
-
-            <div class="centered">
-              <h4 class="mb-5 pb-5">Whether you're having fun on the road, at the beach, or anywhere else.</h4>
-              <p aria-hidden="true" class="fs-5">
-                Create an account and get 20% off your first order!
-              </p>
-              <button type="button" class="btn btn-primary">Sign Up</button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="container mb-4">
-        <div class="">
-            <h2 class="">Hot Items</h2>
-        </div>
-
-        <div class="row wow fadeIn">
-
-          {% for item in object_list %}
-            <div class="col-lg-3 col-md-4 mb-4 card-group">
-              <div class="card shadow-0 " style="background-color: #ffffff6e;">
-                <a href="{{ item.get_absolute_url }}">
-                  <div class="ripple" data-mdb-ripple-color="light" style="background-color: #f7ebed;">
-                    <img src="{{ item.image.url }}" class="img-fluid image"
-                      onmouseover="this.src='{{ item.image_hover.url }}';"
-                      onmouseout="this.src='{{ item.image.url }}';" />
-
-                  </div>
-                </a>
-                <div class="card-header">Featured</div>
-                <div class="card-body">
-                  <h5 class="card-title">{{ item.title }}</h5>
-                  <h6 class="fw-normal blue-text">
-                    {% if item.discount_price %}
-                      <span class="mr-1">
-                        <del>${{ item.price }}</del>
-                      </span>
-                      <span class="fw-bold">${{ item.discount_price }}</span>
-                    {% else %}
-                      {{ item.price }}
-                    {% endif %}
-                  </h6>
-                  <button data-product="{{ item.id }}" data-action="add" class="btn btn-outline-primary btn-md my-0 p update-cart">
-                    Add To Cart
-                  </button>
-                  <a href="{{ item.get_absolute_url }}" class="btn btn-outline-info btn-md my-0 p">
-                    Details
-                  </a>
-                </div>
-              </div>
-            </div>
-          {% endfor %}
-
-        </div>
-
-      </section>
 
 
     </div>
