@@ -613,6 +613,16 @@ def home(request):
     return render(request, 'store/home.html', context, )
 
 
+def category(request, prod_category):
+    prod_category = str(prod_category).upper()
+    products = Item.objects.filter(category=prod_category)
+    category_name = products[0].category
+    context = {
+        'products': products, 'category': category_name
+    }
+    return render(request, "store/category.html", context)
+
+
 class OrderSummaryView(View):
     def get(self, *args, **kwargs):
 

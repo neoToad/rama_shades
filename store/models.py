@@ -9,12 +9,12 @@ from decimal import Decimal
 from django.template.defaultfilters import slugify
 
 CATEGORY_CHOICES = (
-    ('S', 'Square'),
-    ('CE', 'Cat Eye'),
-    ('R', 'Round'),
-    ('RE', 'Rectangular'),
-    ('O', 'Oval'),
-    ('U', 'Unique'),
+    ('SQUARE', 'Square'),
+    ('Cat Eye', 'Cat Eye'),
+    ('Round', 'Round'),
+    ('Rectangular', 'Rectangular'),
+    ('Oval', 'Oval'),
+    ('Unique', 'Unique'),
 
 )
 
@@ -38,7 +38,7 @@ class Item(models.Model):
     title = models.CharField(max_length=100)
     price = models.DecimalField(max_digits=7, decimal_places=2)
     discount_price = models.DecimalField(max_digits=7, decimal_places=2, blank=True, null=True)
-    category = models.CharField(choices=CATEGORY_CHOICES, max_length=2, default='S')
+    category = models.CharField(choices=CATEGORY_CHOICES, max_length=50, default='SQUARE')
     slug = models.SlugField()
     description = models.TextField()
     additional_info = models.TextField()

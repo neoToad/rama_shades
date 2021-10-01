@@ -12,12 +12,14 @@ from .views import (
     RequestRefundView,
     update_item,
     order_success,
+    category,
 )
 app_name = 'store'
 
 urlpatterns = [
     path('', home, name='home'),
     path('product/<slug>/', item_detail_view, name='product'),
+    path('category/<prod_category>', category, name='prod_category'),
 
     # cart functions
     path('add-to-cart/<slug>/', add_to_cart, name='add-to-cart'),
