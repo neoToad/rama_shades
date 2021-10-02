@@ -8,16 +8,11 @@
 
       <!--Grid row-->
       <div class="row wow fadeIn">
-
-        <!--Grid column-->
         <div class="col-md-6 mb-4">
-          <img src="{{ object.image.url }}" class="img-fluid" alt=""
+          <img id="expandedImg" src="{{ object.image.url }}" class="img-fluid" alt=""
                 onmouseover="this.src='{{ object.image_hover.url }}';"
                 onmouseout="this.src='{{ object.image.url }}';" />
         </div>
-        <!--Grid column-->
-
-        <!--Grid column-->
         <div class="col-md-6 mb-4">
 
           <!--Content-->
@@ -25,7 +20,7 @@
 
             <div class="mb-3">
               <a href="">
-                <span class="badge mr-1">{{ object.get_category_display }}</span>
+                <span class="text-dark fs-5">{{ object.get_category_display }}</span>
               </a>
             </div>
 
@@ -73,12 +68,16 @@
           <ul class="d-flex list-unstyled">
             <li class="p-2 mx-2">
               <div class="">
-                <img src="https://ae01.alicdn.com/kf/H62405224155f41a7839d30d2764de5bdU/Custom-Stainless-Steel-Name-Necklace-For-Women-Girl-Personalized-Boho-Rainbow-Soft-Pottery-Choker-Pendant-Jewelry.jpg_50x50.jpg_.webp" class="" title="Style 1" alt="Style 1" data-spm-anchor-id="a2g0o.detail.1000016.i9.49f36df3yiypp2">
+                <img src="https://ae01.alicdn.com/kf/H62405224155f41a7839d30d2764de5bdU/Custom-Stainless-Steel-Name-
+                Necklace-For-Women-Girl-Personalized-Boho-Rainbow-Soft-Pottery-Choker-Pendant-Jewelry.jpg_50x50.jpg_.webp"
+                     class="box" title="Style 1" alt="Style 1" onclick="myFunction(this);">
               </div>
             </li>
             <li class="p-2">
               <div class="">
-                <img src="https://ae01.alicdn.com/kf/H5841a7d35532476da5d841c2d02f7a07M/Custom-Stainless-Steel-Name-Necklace-For-Women-Girl-Personalized-Boho-Rainbow-Soft-Pottery-Choker-Pendant-Jewelry.jpg_50x50.jpg_.webp" class="" title="Style 2" alt="Style 2" data-spm-anchor-id="a2g0o.detail.1000016.i8.49f36df3yiypp2">
+                <img src="https://ae01.alicdn.com/kf/H5841a7d35532476da5d841c2d02f7a07M/Custom-Stainless-Steel-Name-
+                Necklace-For-Women-Girl-Personalized-Boho-Rainbow-Soft-Pottery-Choker-Pendant-Jewelry.jpg_50x50.jpg_.webp"
+                     class="box" title="Style 2" alt="Style 2" onclick="myFunction(this);">
               </div>
             </li>
           </ul>
@@ -128,6 +127,43 @@
       <!--Grid row-->
 
     </div>
+
+    <script type="text/javascript">
+      function myFunction(imgs) {
+
+        // Get the expanded image
+        var expandImg = document.getElementById("expandedImg");
+
+
+        // Use the same src in the expanded image as the image being clicked on from the grid
+        expandImg.src = imgs.src;
+
+        // Use the value of the alt attribute of the clickable image as text inside the expanded image
+        imgText.innerHTML = imgs.alt;
+
+
+
+        // Show the container element (hidden with CSS)
+        expandImg.parentElement.style.display = "block";
+
+      }
+      // Put Border On Style Image
+      let boxes = Array.from(document.querySelectorAll('.box'));
+
+      const handleClick = (e) => {
+        e.preventDefault();
+        boxes.forEach(node => {
+          node.classList.remove('selected');
+        });
+        e.currentTarget.classList.add('selected');
+
+      }
+
+      boxes.forEach(node => {
+        node.addEventListener('click', handleClick)
+      });
+
+    </script>
   </main>
 
 {% endblock content %}

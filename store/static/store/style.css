@@ -41,6 +41,15 @@ body {
     content: none;
 }
 
+.box {
+  height:50px;
+  width: 50px;
+}
+
+.selected {
+  border: 1px solid black;
+}
+
 @media only screen and (max-width: 991px) {
   .nav-ms-5 {
     margin-left: unset;
