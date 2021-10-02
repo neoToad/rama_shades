@@ -67,7 +67,13 @@ class Item(models.Model):
 
 class ItemImage(models.Model):
     item = models.ForeignKey(Item, related_name='images', on_delete=models.CASCADE)
-    image = models.ImageField()
+    image = models.ImageField(upload_to='images/')
+
+
+class ItemStyle(models.Model):
+    item = models.ForeignKey(Item, related_name='styles', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='images/')
+    name = models.CharField(max_length=50, blank=True, null=True)
 
 
 class OrderItem(models.Model):

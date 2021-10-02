@@ -37,10 +37,12 @@ def products(request):
 
 def item_detail_view(request, slug):
     product = Item.objects.get(slug=slug)
+    styles = product.styles.all()
     image_list = product.images.all()
     context = {
         'object': product,
-        'images': image_list
+        'images': image_list,
+        'styles': styles,
     }
     return render(request, "store/product.html", context)
 
