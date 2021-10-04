@@ -31,40 +31,21 @@
             </p>
 
             <p class="lead fs-3">{{ object.title }}</p>
-            <div class="">
-              <img src="{{ object.image.url }}"
-                   class="box selected" title="Style 1" alt="Style 1" onclick="myFunction(this);">
-            </div>
 
             <p class="lead font-weight-bold">Description</p>
 
             <p>{{ object.description }}</p>
 
-            <p class="fs-5">Choose a style below:</p>
 
-            <ul class="d-flex list-unstyled">
-              {% for style in styles %}
-                <li class="p-2">
-                  <div class="text-center">{{ style.name }}</div>
-                  <div class="">
-                    <img src="{{ style.image.url }}"
-                         class="box" title="{{ style.name }}" alt="{{ style.name }}" onclick="myFunction(this);">
-                  </div>
-                </li>
-              {% endfor %}
-            </ul>
-
-
-
-
-            <a href="{{ object.get_add_to_cart_url }}" class="btn btn-primary btn-md my-0 p">
-              Add to cart
+            <button data-product="{{ object.id }}" data-action="add"
+                    class="btn btn-primary btn-md my-0 p update-cart">
+              Add To Cart
               <i class="fas fa-shopping-cart ml-1"></i>
-            </a>
-            <a href="{{ object.get_remove_from_cart_url }}" class="btn btn-danger btn-md my-0 p">
+            </button>
+            <a href="{{ object.get_remove_from_cart_url }}"
+               class="btn btn-danger btn-md my-0 p">
               Remove from cart
             </a>
-
           </div>
 
 
