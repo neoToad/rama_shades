@@ -10,14 +10,13 @@ def categories():
 
 
 def cart_processor(request):
+    prod_categories = categories()
     if request.user.is_authenticated:
         order, created = Order.objects.get_or_create(user=request.user, ordered=False)
         items = order.user.orderitem_set.all().exclude(ordered=True)
         cart_items = order.get_cart_items
     else:
         return cookie_cart(request)
-
-    prod_categories = categories()
 
     return {'items': items, 'cart_items': cart_items, 'object': order, 'categories': prod_categories}
 

@@ -42,4 +42,6 @@ def cookie_cart(request):
             items.append(item)
         except:
             cart_items -= cart[i]['quantity']
-    return {'items': items, 'cart_items': cart_items, 'object': order}
+    return {'items': items, 'cart_items': cart_items, 'object': order,
+            'categories': ['Square', 'Cat Eye', 'Round', 'Rectangular',
+                  'Oval', 'Unique']}

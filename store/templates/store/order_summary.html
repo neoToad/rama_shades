@@ -20,12 +20,26 @@
         {% for order_item in items %}
         <tr>
             <th scope="row">{{ forloop.counter }}</th>
+
             <td>{{ order_item.item.title }}</td>
-            <td>{{ order_item.item.price }}</td>
+
             <td>
-                <a href="{% url 'store:remove-single-item-from-cart' order_item.item.slug %}"><i class="fas fa-minus mr-2"></i></a>
+                <span class="mr-1">
+                    <del>${{ order_item.item.price }}</del>
+                  </span>
+                  <span class="fw-bold">${{ order_item.item.discount_price }}</span>
+            </td>
+
+
+            <td>
+                <a href="{% url 'store:remove-single-item-from-cart' order_item.item.slug %}">
+                    {% if order_item.quantity == 1 %}{% else %}
+                        <i class="fas fa-minus mr-2"></i>
+                    {% endif %}
+                </a>
                 {{ order_item.quantity }}
-                <a href="{% url 'store:add-to-cart' order_item.item.slug %}"><i class="fas fa-plus ml-2"></i></a>
+                <a href=""><i data-product="{{ order_item.item.id }}" data-action="add"
+                              class="fas fa-plus ml-2 update-cart" ></i></a>
             </td>
             <td>
             {% if order_item.item.discount_price %}
