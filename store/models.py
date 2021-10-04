@@ -45,6 +45,7 @@ class Item(models.Model):
     image = models.ImageField(upload_to='images/')
     image_hover = models.ImageField(blank=True, null=True, upload_to='images/')
     item_id = models.IntegerField(null=True)
+    default_style = models.CharField(max_length=50, null=True)
 
     def __str__(self):
         return self.title
@@ -84,10 +85,11 @@ class OrderItem(models.Model):
                              on_delete=models.CASCADE)
     ordered = models.BooleanField(default=False)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    style = models.CharField(max_length=50, null=True)
     quantity = models.IntegerField(default=1)
 
     def __str__(self):
-        return f"{self.quantity} of {self.item.title}"
+        return f"{self.quantity} of {self.item.title}-{self.style}"
 
     def get_total_item_price(self):
         return self.quantity * self.item.price

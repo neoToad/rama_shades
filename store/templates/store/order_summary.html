@@ -11,6 +11,7 @@
         <tr>
             <th scope="col">#</th>
             <th scope="col">Item title</th>
+            <th scope="col">Style</th>
             <th scope="col">Price</th>
             <th scope="col">Quantity</th>
             <th scope="col">Total Item Price</th>
@@ -22,6 +23,7 @@
             <th scope="row">{{ forloop.counter }}</th>
 
             <td>{{ order_item.item.title }}</td>
+            <td>{{ order_item.style }}</td>
 
             <td>
                 <span class="mr-1">

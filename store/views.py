@@ -710,6 +710,7 @@ def update_item(request):
     data = json.loads(request.body)
     product_id = data['productId']
     action = data['action']
+    style = data['style']
 
     print('Action:', action)
     print('productId:', product_id)
@@ -718,6 +719,7 @@ def update_item(request):
     order_item, created = OrderItem.objects.get_or_create(
         item=product,
         user=request.user,
+        style=style,
         ordered=False
     )
 

@@ -49,7 +49,8 @@
             </ul>
 
 
-            <button data-product="{{ object.id }}" data-action="add"
+            <button id="add" data-product="{{ object.id }}" data-style=" "
+                    data-action="add"
                     class="btn btn-primary btn-md my-0 p update-cart">
               Add To Cart
               <i class="fas fa-shopping-cart ml-1"></i>
@@ -118,10 +119,6 @@
         // Use the same src in the expanded image as the image being clicked on from the grid
         expandImg.src = imgs.src;
 
-        // Use the value of the alt attribute of the clickable image as text inside the expanded image
-        imgText.innerHTML = imgs.alt;
-
-
 
         // Show the container element (hidden with CSS)
         expandImg.parentElement.style.display = "block";
@@ -139,18 +136,19 @@
         });
         e.currentTarget.classList.add('selected');
 
+        var alt = document.getElementsByClassName('selected')[0];
+        var add_btn = document.getElementById('add');
+        add_btn.setAttribute("data-style", alt.alt);
+        console.log('USER:', alt.alt)
+
       }
+
 
       boxes.forEach(node => {
         node.addEventListener('click', handleClick)
       });
 
 
-      // Get variable alt from selected image
-
-      var alt = link.getElementsByClassName('selected')[0].alt;
-
-      console.log('USER:', alt)
 
 
 
