@@ -75,6 +75,9 @@ class ItemStyle(models.Model):
     image = models.ImageField(upload_to='images/')
     name = models.CharField(max_length=50, blank=True, null=True)
 
+    def __str__(self):
+        return self.item.title + ' ' + self.name
+
 
 class OrderItem(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,

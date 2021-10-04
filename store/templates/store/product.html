@@ -36,6 +36,18 @@
 
             <p>{{ object.description }}</p>
 
+            <ul class="d-flex list-unstyled">
+              {% for style in styles %}
+                <li class="p-2">
+                  <div class="text-center">{{ style.name }}</div>
+                  <div class="">
+                    <img src="{{ style.image.url }}"
+                         class="box" title="{{ style.name }}" alt="{{ style.name }}" onclick="myFunction(this);">
+                  </div>
+                </li>
+              {% endfor %}
+            </ul>
+
 
             <button data-product="{{ object.id }}" data-action="add"
                     class="btn btn-primary btn-md my-0 p update-cart">

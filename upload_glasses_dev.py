@@ -19,7 +19,7 @@ row_count = ws1.max_row
 objs = []
 
 # Bulk Create
-for row_idx in range(2, 10):
+for row_idx in range(2, 3):
     slug = '-'.join(ws1.cell(row=row_idx, column=2).value.split(' '))[:30]
     print(f'C:/Users/colin/PycharmProjects/who_cutie_scraper/items/item-{ws1.cell(row=row_idx, column=1).value}/main_img.png')
 
