@@ -48,7 +48,7 @@
                   <div class="text-center">{{ style.name }}</div>
                   <div class="">
                     <img src="{{ style.image.url }}"
-                         class="box" title="Style 1" alt="{{ style.name }}" onclick="myFunction(this);">
+                         class="box" title="{{ style.name }}" alt="{{ style.name }}" onclick="myFunction(this);">
                   </div>
                 </li>
               {% endfor %}
@@ -151,6 +151,13 @@
       boxes.forEach(node => {
         node.addEventListener('click', handleClick)
       });
+
+
+      // Get variable alt from selected image
+
+      var alt = link.getElementsByClassName('selected')[0].alt;
+
+      console.log('USER:', alt)
 
 
 
