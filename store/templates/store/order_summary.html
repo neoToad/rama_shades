@@ -40,7 +40,9 @@
                     {% endif %}
                 </a>
                 {{ order_item.quantity }}
-                <a href=""><i data-product="{{ order_item.item.id }}" data-action="add"
+                <a href=""><i data-product="{{ order_item.item.id }}"
+                              data-style="{{ order_item.style }}"
+                              data-action="add"
                               class="fas fa-plus ml-2 update-cart" ></i></a>
             </td>
             <td>

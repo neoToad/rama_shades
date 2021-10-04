@@ -13,7 +13,7 @@ def cart_processor(request):
     prod_categories = categories()
     if request.user.is_authenticated:
         order, created = Order.objects.get_or_create(user=request.user, ordered=False)
-        items = order.user.orderitem_set.all().exclude(ordered=True)
+        items = order.user.orderitem_set.all().exclude(ordered=True).order_by('-quantity')
         cart_items = order.get_cart_items
     else:
         return cookie_cart(request)

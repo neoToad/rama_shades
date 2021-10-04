@@ -727,7 +727,8 @@ def update_item(request):
     if order_qs.exists():
         order = order_qs[0]
         # check if the order item is in the order
-        if order.items.filter(item__slug=product.slug).exists():
+
+        if order.items.filter(style=order_item.style).exists():
             order_item.quantity += 1
             order_item.save()
             messages.info(request, "This item quantity was updated.")
