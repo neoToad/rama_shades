@@ -278,6 +278,7 @@ class CheckoutView(View):
                     order_item = OrderItem.objects.create(
                         user=user,
                         item=product,
+                        style=item['product']['style'],
                         quantity=item['quantity'],
                     )
 

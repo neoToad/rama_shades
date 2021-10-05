@@ -7,7 +7,7 @@
     {% for order_item in items %}
         <li class="list-group-item d-flex justify-content-between lh-condensed">
             <div>
-            <h6 class="my-0">{{ order_item.quantity }} x {{ order_item.product.title}}</h6>
+            <h6 class="my-0">{{ order_item.quantity }} x {{ order_item.product.title}} - {{ order_item.product.style}}</h6>
             <small class="text-muted">{{ order_item.product }}</small>
             </div>
             <span class="text-muted">${{ order_item.get_total|floatformat:2 }}</span>
