@@ -34,10 +34,13 @@
 
 
             <td>
-                <a href="{% url 'store:remove-single-item-from-cart' order_item.item.slug %}">
-                    {% if order_item.quantity == 1 %}{% else %}
-                        <i class="fas fa-minus mr-2"></i>
-                    {% endif %}
+                <a href=""><i data-product="{{ order_item.item.id }}"
+                              data-style="{{ order_item.style }}"
+                              data-action="remove"
+                              class="fas fa-minus ml-2 update-cart" ></i></a>
+<!--                    {% if order_item.quantity == 1 %}{% else %}-->
+<!--                        <i class="fas fa-minus mr-2"></i>-->
+<!--                    {% endif %}-->
                 </a>
                 {{ order_item.quantity }}
                 <a href=""><i data-product="{{ order_item.item.id }}"
@@ -52,9 +55,9 @@
             {% else %}
                 ${{ order_item.get_total_item_price|floatformat:2 }}
             {% endif %}
-            <a style='color: red;' href="{% url 'store:remove-from-cart' order_item.item.slug %}">
-                <i class="fas fa-trash float-right"></i>
-            </a>
+<!--            <a style='color: red;' href="{% url 'store:remove-from-cart' order_item.item.slug %}">-->
+<!--                <i class="fas fa-trash float-right"></i>-->
+<!--            </a>-->
             </td>
         </tr>
         {% empty %}

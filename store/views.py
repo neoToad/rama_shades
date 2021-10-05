@@ -729,7 +729,15 @@ def update_item(request):
         # check if the order item is in the order
 
         if order.items.filter(style=order_item.style).exists():
-            order_item.quantity += 1
+            if action == 'add':
+                order_item.quantity += 1
+            elif action == 'remove':
+                order_item.quantity -= 1
+                if order_item.quantity <= 0:
+                    order_item.delete()
+                    return redirect("/")
+
+
             order_item.save()
             messages.info(request, "This item quantity was updated.")
             return JsonResponse('Item was added', safe=False)
