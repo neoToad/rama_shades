@@ -404,117 +404,158 @@ class PaymentView(View):
                         userprofile.one_click_purchasing = True
                         userprofile.save()
                 amount = int(order.total() * 100)
-                # try:
-                if use_default or save:
-                    # charge the customer because we cannot charge the token more than once
-                    charge = stripe.Charge.create(
-                        amount=amount,  # cents
-                        currency="usd",
-                        customer=userprofile.stripe_customer_id
-                    )
-                else:
-                    # charge once off on the token
-                    charge = stripe.Charge.create(
-                        amount=amount,  # cents
-                        currency="usd",
-                        source=token
-                    )
-                # create the payment
-                payment = Payment()
-                payment.stripe_charge_id = charge['id']
-                payment.user = self.request.user
-                payment.amount = order.total()
-                payment.save()
-                # assign the payment to the order
-                order_items = order.items.all()
-                order_items.update(ordered=True)
-                for item in order_items:
-                    item.save()
-                order.ordered = True
-                order.payment = payment
-                order.ref_code = create_ref_code()
-                order.save()
-                messages.success(self.request, "Your order was successful!")
-                return redirect("/")
+                try:
+                    if use_default or save:
+                        # charge the customer because we cannot charge the token more than once
+                        charge = stripe.Charge.create(
+                            amount=amount,  # cents
+                            currency="usd",
+                            customer=userprofile.stripe_customer_id
+                        )
+                    else:
+                        # charge once off on the token
+                        charge = stripe.Charge.create(
+                            amount=amount,  # cents
+                            currency="usd",
+                            source=token
+                        )
+                    # create the payment
+                    payment = Payment()
+                    payment.stripe_charge_id = charge['id']
+                    payment.user = self.request.user
+                    payment.amount = order.total()
+                    payment.save()
+                    # assign the payment to the order
+                    order_items = order.items.all()
+                    order_items.update(ordered=True)
+                    for item in order_items:
+                        item.save()
+                    order.ordered = True
+                    order.payment = payment
+                    order.ref_code = create_ref_code()
+                    order.save()
+                    messages.success(self.request, "Your order was successful!")
+                    return redirect("/")
+
+                except stripe.error.CardError as e:
+                    body = e.json_body
+                    err = body.get('error', {})
+                    messages.warning(self.request, f"{err.get('message')}")
+                    return redirect("/payment/stripe/")
+
+                except stripe.error.RateLimitError as e:
+                    # Too many requests made to the API too quickly
+                    messages.warning(self.request, "Rate limit error")
+                    return redirect("/payment/stripe/")
+
+                except stripe.error.InvalidRequestError as e:
+                    # Invalid parameters were supplied to Stripe's API
+                    print(e)
+                    messages.warning(self.request, "Invalid parameters")
+                    return redirect("/payment/stripe/")
+
+                except stripe.error.AuthenticationError as e:
+                    # Authentication with Stripe's API failed
+                    # (maybe you changed API keys recently)
+                    messages.warning(self.request, "Not authenticated")
+                    return redirect("/payment/stripe/")
+
+                except stripe.error.APIConnectionError as e:
+                    # Network communication with Stripe failed
+                    messages.warning(self.request, "Network error")
+                    return redirect("/payment/stripe/")
+
+                except stripe.error.StripeError as e:
+                    # Display a very generic error to the user, and maybe send
+                    # yourself an email
+                    messages.warning(
+                        self.request, "Something went wrong. You were not charged. Please try again.")
+                    return redirect("/payment/stripe/")
+
+                except Exception as e:
+                    # send an email to ourselves
+                    messages.warning(
+                        self.request, "A serious error occurred. We have been notifed.")
+                    return redirect("/payment/stripe/")
 
         else:
             user = self.request.session.get('guest_checkout_id')
             order = Order.objects.get(id=user, ordered=False)
 
             form = PaymentForm(self.request.POST)
+            try:
+                if form.is_valid():
+                    token = form.cleaned_data.get('stripeToken')
+                    use_default = form.cleaned_data.get('use_default')
 
-            if form.is_valid():
-                token = form.cleaned_data.get('stripeToken')
-                use_default = form.cleaned_data.get('use_default')
+                    amount = int(order.total() * 100)
 
-                amount = int(order.total() * 100)
+                    charge = stripe.Charge.create(
+                        amount=amount,  # cents
+                        currency="usd",
+                        source=token
+                    )
 
-                charge = stripe.Charge.create(
-                    amount=amount,  # cents
-                    currency="usd",
-                    source=token
-                )
+                    payment = Payment()
+                    payment.stripe_charge_id = charge['id']
+                    payment.user = order.user
+                    payment.amount = order.total()
+                    payment.save()
 
-                payment = Payment()
-                payment.stripe_charge_id = charge['id']
-                payment.user = order.user
-                payment.amount = order.total()
-                payment.save()
+                    # assign the payment to the order
+                    order_items = order.items.all()
+                    order_items.update(ordered=True)
+                    for item in order_items:
+                        item.save()
+                    order.ordered = True
+                    order.payment = payment
+                    order.ref_code = create_ref_code()
+                    order.save()
+                    messages.success(self.request, "Your order was successful!")
+                    response = redirect('/')
+                    response.delete_cookie('cart')
+                    return response
 
-                # assign the payment to the order
-                order_items = order.items.all()
-                order_items.update(ordered=True)
-                for item in order_items:
-                    item.save()
-                order.ordered = True
-                order.payment = payment
-                order.ref_code = create_ref_code()
-                order.save()
-                messages.success(self.request, "Your order was successful!")
-                response = redirect('/')
-                response.delete_cookie('cart')
-                return response
+            except stripe.error.CardError as e:
+                body = e.json_body
+                err = body.get('error', {})
+                messages.warning(self.request, f"{err.get('message')}")
+                return redirect("/payment/stripe/")
 
-            # except stripe.error.CardError as e:
-            #     body = e.json_body
-            #     err = body.get('error', {})
-            #     messages.warning(self.request, f"{err.get('message')}")
-            #     return redirect("/home.html")
-            #
-            # except stripe.error.RateLimitError as e:
-            #     # Too many requests made to the API too quickly
-            #     messages.warning(self.request, "Rate limit error")
-            #     return redirect("/")
-            #
-            # except stripe.error.InvalidRequestError as e:
-            #     # Invalid parameters were supplied to Stripe's API
-            #     print(e)
-            #     messages.warning(self.request, "Invalid parameters")
-            #     return redirect("/home.html")
-            #
-            # except stripe.error.AuthenticationError as e:
-            #     # Authentication with Stripe's API failed
-            #     # (maybe you changed API keys recently)
-            #     messages.warning(self.request, "Not authenticated")
-            #     return redirect("/")
-            #
-            # except stripe.error.APIConnectionError as e:
-            #     # Network communication with Stripe failed
-            #     messages.warning(self.request, "Network error")
-            #     return redirect("/")
-            #
-            # except stripe.error.StripeError as e:
-            #     # Display a very generic error to the user, and maybe send
-            #     # yourself an email
-            #     messages.warning(
-            #         self.request, "Something went wrong. You were not charged. Please try again.")
-            #     return redirect("/home.html")
-            #
-            # except Exception as e:
-            #     # send an email to ourselves
-            #     messages.warning(
-            #         self.request, "A serious error occurred. We have been notifed.")
-            #     return redirect("/home.html")
+            except stripe.error.RateLimitError as e:
+                # Too many requests made to the API too quickly
+                messages.warning(self.request, "Rate limit error")
+                return redirect("/payment/stripe/")
+
+            except stripe.error.InvalidRequestError as e:
+                # Invalid parameters were supplied to Stripe's API
+                print(e)
+                messages.warning(self.request, "Invalid parameters")
+                return redirect("/payment/stripe/")
+
+            except stripe.error.AuthenticationError as e:
+                # Authentication with Stripe's API failed
+                # (maybe you changed API keys recently)
+                messages.warning(self.request, "Not authenticated")
+                return redirect("/payment/stripe/")
+
+            except stripe.error.APIConnectionError as e:
+                # Network communication with Stripe failed
+                messages.warning(self.request, "Network error")
+                return redirect("/payment/stripe/")
+
+            except stripe.error.StripeError as e:
+                # Display a very generic error to the user, and maybe send
+                # yourself an email
+                messages.warning(
+                    self.request, "Something went wrong. You were not charged. Please try again.")
+                return redirect("/payment/stripe/")
+
+            except Exception as e:
+                # send an email to ourselves
+                messages.warning(
+                    self.request, "A serious error occurred. We have been notifed.")
+                return redirect("/payment/stripe/")
 
         messages.warning(self.request, "Invalid data received")
         return redirect("/payment/stripe/")
