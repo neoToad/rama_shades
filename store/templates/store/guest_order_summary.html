@@ -34,7 +34,8 @@
 
 
             <td>
-                <a href=""><i data-product="{{ order_item.product.id }}" data-action="remove"
+                <a href=""><i data-style="{{ order_item.product.style }}"
+                              data-product="{{ order_item.product.id }}" data-action="remove"
                               class="fas fa-minus mr-2 update-cart"></i></a>
                 {{ order_item.quantity }}
                 <a href=""><i

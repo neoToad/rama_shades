@@ -40,6 +40,11 @@ function addCookieItem(productId, style, action){
 
     if(action == 'remove'){
         cart[productId]['quantity'] -= 1
+        cart[productId][style]['quantity'] -= 1
+
+        if(cart[productId][style]['quantity'] <= 0){
+          delete cart[productId][style]
+        }
 
         if(cart[productId]['quantity'] <= 0){
           console.log('Remove Item')
