@@ -62,7 +62,7 @@ class Item(models.Model):
 
     def get_remove_from_cart_url(self):
         return reverse("store:remove-from-cart", kwargs={
-            'slug': self.slug
+            'slug': self.slug,
         })
 
 

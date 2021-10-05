@@ -54,7 +54,10 @@
                       {{ item.price }}
                     {% endif %}
                   </h6>
-                  <button data-product="{{ item.id }}" data-action="add" class="btn btn-outline-primary btn-md my-0 p update-cart">
+                  <button data-style="{{ item.default_style }}"
+                          data-product="{{ item.id }}"
+                          data-action="add"
+                          class="btn btn-outline-primary btn-md my-0 p update-cart">
                     Add To Cart
                   </button>
                   <a href="{{ item.get_absolute_url }}" class="btn btn-outline-info btn-md my-0 p">
@@ -162,7 +165,8 @@
                       {{ item.price }}
                     {% endif %}
                   </h6>
-                  <button data-product="{{ item.id }}" data-action="add" class="btn btn-outline-primary btn-md my-0 p update-cart">
+                  <button data-style="{{ item.default_style }}"
+                          data-product="{{ item.id }}" data-action="add" class="btn btn-outline-primary btn-md my-0 p update-cart">
                     Add To Cart
                   </button>
                   <a href="{{ item.get_absolute_url }}" class="btn btn-outline-info btn-md my-0 p">

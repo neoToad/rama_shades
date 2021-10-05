@@ -563,7 +563,7 @@ def remove_from_cart(request, slug):
             order_item = OrderItem.objects.filter(
                 item=item,
                 user=request.user,
-                ordered=False
+                ordered=False,
             )[0]
             order.items.remove(order_item)
             order_item.delete()
