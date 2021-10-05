@@ -346,9 +346,6 @@ class CheckoutView(View):
 
             payment_option = form.cleaned_data.get('payment_option')
 
-
-
-
             self.request.session['guest_checkout_id'] = order.id
 
             if payment_option == 'S':
