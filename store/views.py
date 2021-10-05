@@ -124,19 +124,31 @@ class CheckoutView(View):
                             return redirect('store:checkout')
                     else:
                         print("User is entering a new shipping address")
+                        first_name = form.cleaned_data.get(
+                            'first_name')
+                        last_name = form.cleaned_data.get(
+                            'last_name')
                         shipping_address1 = form.cleaned_data.get(
                             'shipping_address')
                         shipping_address2 = form.cleaned_data.get(
                             'shipping_address2')
+                        city = form.cleaned_data.get(
+                            'city')
+                        state = form.cleaned_data.get(
+                            'state')
                         shipping_country = form.cleaned_data.get(
                             'shipping_country')
                         shipping_zip = form.cleaned_data.get('shipping_zip')
 
-                        if is_valid_form([shipping_address1, shipping_country, shipping_zip]):
+                        if is_valid_form([first_name, last_name, shipping_address1, city, state, shipping_country, shipping_zip]):
                             shipping_address = Address(
                                 user=self.request.user,
+                                first_name=first_name,
+                                last_name=last_name,
                                 street_address=shipping_address1,
                                 apartment_address=shipping_address2,
+                                city=city,
+                                state=state,
                                 country=shipping_country,
                                 zip=shipping_zip,
                                 address_type='S'
@@ -187,19 +199,33 @@ class CheckoutView(View):
                             return redirect('store:checkout')
                     else:
                         print("User is entering a new billing address")
+                        first_name = form.cleaned_data.get(
+                            'billing_first_name')
+                        last_name = form.cleaned_data.get(
+                            'billing_last_name')
                         billing_address1 = form.cleaned_data.get(
                             'billing_address')
                         billing_address2 = form.cleaned_data.get(
                             'billing_address2')
+                        billing_city = form.cleaned_data.get(
+                            'billing_city')
+                        billing_state = form.cleaned_data.get(
+                            'billing_state')
                         billing_country = form.cleaned_data.get(
                             'billing_country')
                         billing_zip = form.cleaned_data.get('billing_zip')
 
-                        if is_valid_form([billing_address1, billing_country, billing_zip]):
+                        if is_valid_form([first_name, last_name, billing_address1,
+                                          billing_city, billing_state, billing_country,
+                                          billing_zip]):
                             billing_address = Address(
                                 user=self.request.user,
+                                first_name=first_name,
+                                last_name=last_name,
                                 street_address=billing_address1,
                                 apartment_address=billing_address2,
+                                city=billing_city,
+                                state=billing_state,
                                 country=billing_country,
                                 zip=billing_zip,
                                 address_type='B'
