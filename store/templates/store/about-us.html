@@ -1,0 +1,168 @@
+{% extends "store/base.html" %}
+{% load static %}
+
+{% block extra_head %}
+<link href="{% static 'store/gallery.css' %}" rel="stylesheet">
+{% endblock extra_head %}
+
+{% block content %}
+  <main class="pt-5">
+
+    <div class="au-main py-5">
+      <div class="container">
+        <div class="row justify-content-md-center mb-3">
+          <div class="mbr-white col-md-10">
+            <h1 class="mbr-section-title text-center mbr-bold pb-3 mbr-fonts-style
+            display-5">Responsive Bootstrap About Us Page Template</h1>
+            <h3 class="mbr-section-subtitle text-center mbr-light pb-3 mbr-fonts-style
+             display-2">MEET OUR TEAM</h3>
+            <p class=" text-center pb-3 ">
+              We are all very different. We were born in different cities, at different times,
+              we love different music, food, movies. But we have something that unites us all.
+              It is our company. We are its heart. We are not just a team, we are a family.
+            </p>
+            <div class="text-center"><a class="btn btn-md btn-black-outline display-4"
+                                         href="">
+              CONTACT US</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gallery" id="gallery">
+      <div class="gallery-item">
+        <div class="content"><img src="https://source.unsplash.com/random/?tech,care" alt=""></div>
+      </div>
+      <div class="gallery-item">
+        <div class="content"><img src="https://source.unsplash.com/random/?tech,studied" alt=""></div>
+      </div>
+      <div class="gallery-item">
+        <div class="content"><img src="https://source.unsplash.com/random/?tech,substance" alt=""></div>
+      </div>
+      <div class="gallery-item">
+        <div class="content"><img src="https://source.unsplash.com/random/?tech,choose" alt=""></div>
+      </div>
+      <div class="gallery-item">
+        <div class="content"><img src="https://source.unsplash.com/random/?tech,past" alt=""></div>
+      </div>
+      <div class="gallery-item">
+        <div class="content"><img src="https://source.unsplash.com/random/?tech,lamp" alt=""></div>
+      </div>
+      <div class="gallery-item">
+        <div class="content"><img src="https://source.unsplash.com/random/?tech,yet" alt=""></div>
+      </div>
+      <div class="gallery-item">
+        <div class="content"><img src="https://source.unsplash.com/random/?tech,eight" alt=""></div>
+      </div>
+      <div class="gallery-item">
+        <div class="content"><img src="https://source.unsplash.com/random/?tech,instrument" alt=""></div>
+      </div>
+    </div>
+
+    <div class="container px-4 py-5" id="hanging-icons">
+      <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
+        <div class="col d-flex align-items-start">
+          <div>
+            <h2>Featured title</h2>
+            <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
+
+          </div>
+        </div>
+        <div class="col d-flex align-items-start">
+          <div>
+            <h2>Featured title</h2>
+            <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
+
+          </div>
+        </div>
+        <div class="col d-flex align-items-start">
+          <div>
+            <h2>Featured title</h2>
+            <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="container text-center">
+      <h2>Testimonials</h2>
+      <div class="row">
+        <!-- Top reviews column -->
+        <div class="col-md-4 mb-4">
+          <!-- Review -->
+          <div class="shadow-4 p-4 rounded-lg mb-4">
+            <img class="shadow-1-strong rounded-circle" style="width: 100px;" src="https://mdbcdn.b-cdn.net/img/Marketing/reviews/new/image001.jpg" alt="Sample">
+
+            <div class="pt-3">
+              <h5 class="">Pedro Cohen</h5>
+              <ul class="mb-2 d-flex justify-content-center list-unstyled">
+                <li><i class="fas fa-star fa-sm text-primary me-1"></i></li>
+                <li><i class="fas fa-star fa-sm text-primary me-1"></i></li>
+                <li><i class="fas fa-star fa-sm text-primary me-1"></i></li>
+                <li><i class="fas fa-star fa-sm text-primary me-1"></i></li>
+                <li><i class="fas fa-star fa-sm text-primary me-1"></i></li>
+              </ul>
+              <p class="mb-0">
+                <i class="fas fa-quote-left pe-2"></i>MDB plugins are my #1 tool. I personally don’t like building front-end and nothing speeds up this part of development more than your simple &amp; high-quality solutions. Kudos MDB Team!
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <!-- Review -->
+          <!-- Review -->
+          <div class="shadow-4 p-4 rounded-lg mb-4">
+            <img class="shadow-1-strong rounded-circle" style="width: 100px;" src="https://mdbcdn.b-cdn.net/wp-content/themes/mdbootstrap4/content/en/tools/admin/reviews/avatars/small/Gerard Sanderson.jpg" alt="Sample">
+
+            <div class="pt-3">
+              <h5 class="">Gerard Sanderson</h5>
+              <ul class="mb-2 d-flex justify-content-center list-unstyled">
+                <li><i class="fas fa-star fa-sm text-primary me-1"></i></li>
+                <li><i class="fas fa-star fa-sm text-primary me-1"></i></li>
+                <li><i class="fas fa-star fa-sm text-primary me-1"></i></li>
+                <li><i class="fas fa-star fa-sm text-primary me-1"></i></li>
+                <li><i class="fas fa-star fa-sm text-primary me-1"></i></li>
+              </ul>
+              <p class="mb-0">
+                <i class="fas fa-quote-left pe-2"></i>Design is stunning. Charts look just beautiful. But what’s more important they work as they should. Usage is simple and fast. Plenty of practical examples make the work a pure pleasure.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <!-- Review -->
+          <!-- Review -->
+          <div class="shadow-4 p-4 rounded-lg mb-4">
+            <img class="shadow-1-strong rounded-circle" style="width: 100px;" src="https://mdbcdn.b-cdn.net/wp-content/themes/mdbootstrap4/content/en/tools/ecommerce//reviews/avatars/small/Adele%20Parker.jpg" alt="Sample">
+
+            <div class="pt-3">
+              <h5 class="">Adele Parker</h5>
+              <ul class="mb-2 d-flex justify-content-center list-unstyled">
+                <li><i class="fas fa-star fa-sm text-primary me-1"></i></li>
+                <li><i class="fas fa-star fa-sm text-primary me-1"></i></li>
+                <li><i class="fas fa-star fa-sm text-primary me-1"></i></li>
+                <li><i class="fas fa-star fa-sm text-primary me-1"></i></li>
+                <li><i class="fas fa-star fa-sm text-primary me-1"></i></li>
+              </ul>
+              <p class="mb-0">
+                <i class="fas fa-quote-left pe-2"></i>Beautiful, minimalist design and simplicity – this is something that every project definitely needs.<br>
+                Great documentation focused on practical solutions.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        </div>
+      </div>
+    </section>
+
+
+  </main>
+
+{% endblock content %}
+
+{% block extra_scripts %}
+
+<script type="text/javascript" src="{% static 'js/gallery.js' %}"></script>
+{% endblock extra_scripts %}

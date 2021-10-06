@@ -821,3 +821,7 @@ def update_item(request):
 
 def order_success(request):
     return render(request, 'store/order_success.html',)
+
+
+def about_us(request):
+    return render(request, 'store/about-us.html', )
