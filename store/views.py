@@ -825,3 +825,11 @@ def order_success(request):
 
 def about_us(request):
     return render(request, 'store/about-us.html', )
+
+
+def return_policy(request):
+    return render(request, 'store/return-policy.html', )
+
+
+def shipping_policy(request):
+    return render(request, 'store/shipping-policy.html', )

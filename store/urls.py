@@ -14,6 +14,8 @@ from .views import (
     order_success,
     category,
     about_us,
+    return_policy,
+    shipping_policy,
 )
 app_name = 'store'
 
@@ -36,6 +38,8 @@ urlpatterns = [
     path('payment/<payment_option>/', PaymentView.as_view(), name='payment'),
     path('request-refund/', RequestRefundView.as_view(), name='request-refund'),
     path('update_item/', update_item, name='update_item'),
-    path('order_success/', order_success, name='order_success')
+    path('order_success/', order_success, name='order_success'),
+    path('return-policy/', return_policy, name='return_policy'),
+    path('shipping-policy/', shipping_policy, name='shipping_policy'),
 
 ]
